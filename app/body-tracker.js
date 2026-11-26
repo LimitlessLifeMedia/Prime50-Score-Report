@@ -1,0 +1,29 @@
+'use strict';
+(() => {
+ const STORAGE='prime50-measurements-v1';
+ const fields=['height','weight','waist','hips','chest','arm','thigh','fat','fatmass','lean'];
+ const el=id=>document.getElementById(id);
+ let entries=[];
+ try { const value=JSON.parse(localStorage.getItem(STORAGE)||'[]');if(Array.isArray(value))entries=value.filter(row=>row&&/^\d{4}-\d{2}-\d{2}$/.test(row.date)); } catch {}
+ const today=new Date();const localDate=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+ el('body-date').value=localDate;el('body-date').max=localDate;el('body-scan-date').max=localDate;
+ const number=value=>typeof value==='number'&&Number.isFinite(value);
+ const bmi=row=>number(row.height)&&row.height>0&&number(row.weight)&&row.weight>0?row.weight/(row.height*row.height)*703:null;
+ const display=value=>number(value)?value.toFixed(1):'—';
+ function store(){try{localStorage.setItem(STORAGE,JSON.stringify(entries));return true;}catch{el('body-message').textContent='Storage unavailable. These readings remain only for this visit; export a copy.';return false;}}
+ function change(key,scan=false){const rows=entries.filter(row=>number(row[key])).sort((a,b)=>(scan?a.scanDate:a.date).localeCompare(scan?b.scanDate:b.date));if(rows.length<2)return '—';const value=rows.at(-1)[key]-rows[0][key];return `${value>0?'+':''}${value.toFixed(1)}`;}
+ function render(){
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  const withBmi=entries.filter(row=>bmi(row)!==null);el('body-bmi').textContent=withBmi.length?display(bmi(withBmi.at(-1))):'—';el('body-waist-change').textContent=change('waist');el('body-fat-change').textContent=change('fat',true);
+  const table=el('body-history');table.replaceChildren();
+  if(!entries.length){const row=table.insertRow();const cell=row.insertCell();cell.colSpan=9;cell.textContent='No measurements yet. Save your first check-in above.';}
+  for(const entry of [...entries].reverse()){const row=table.insertRow();const values=[entry.date,display(entry.weight),display(bmi(entry)),display(entry.waist),['hips','chest','arm','thigh'].map(key=>display(entry[key])).join(' / '),entry.scanDate||'—',display(entry.fat),[display(entry.fatmass),display(entry.lean)].join(' / ')];for(const value of values)row.insertCell().textContent=value;const button=document.createElement('button');button.type='button';button.className='outline';button.textContent='Delete';button.setAttribute('aria-label',`Delete measurement from ${entry.date}`);button.onclick=()=>{if(!confirm(`Delete the measurement from ${entry.date}?`))return;entries=entries.filter(item=>item!==entry);store();render();};row.insertCell().append(button);}
+ }
+ function preview(){const height=Number(el('body-height').value),weight=Number(el('body-weight').value);el('bmi-preview').textContent=height>=36&&height<=96&&weight>=40&&weight<=1000?`Calculated BMI: ${(weight/(height*height)*703).toFixed(1)}. BMI does not distinguish fat from muscle.`:'Enter height and weight to calculate BMI.';}
+ el('body-height').addEventListener('input',preview);el('body-weight').addEventListener('input',preview);
+ el('body-form').addEventListener('submit',event=>{event.preventDefault();const date=el('body-date').value;const row={date,scanDate:el('body-scan-date').value};for(const key of fields){const value=el('body-'+key).value;row[key]=value===''?null:Number(value);}const message=el('body-message');if(!fields.some(key=>number(row[key]))){message.textContent='Enter at least one measurement.';return;}if((row.height===null)!==(row.weight===null)){message.textContent='Enter both height and weight for BMI, or leave both blank.';return;}const hasScan=['fat','fatmass','lean'].some(key=>number(row[key]));if(hasScan&&!row.scanDate){message.textContent='Enter the date shown on your DEXA report.';return;}if(row.scanDate>date){message.textContent='DEXA scan date cannot be after the check-in date.';return;}if(!hasScan)row.scanDate='';const existing=entries.findIndex(item=>item.date===date);if(existing!==-1){if(!confirm('Replace the existing check-in for this date? Blank fields will clear its previous readings.'))return;entries[existing]=row;}else entries.push(row);const saved=store();render();if(saved)message.textContent='Check-in saved on this device.';});
+ el('body-clear').onclick=()=>{if(!confirm('Permanently delete all body measurements stored in this browser?'))return;entries=[];store();render();};
+ el('body-export').onclick=()=>{if(!entries.length){el('body-message').textContent='Add a measurement before exporting.';return;}const keys=['date','height','weight','waist','hips','chest','arm','thigh','scanDate','fat','fatmass','lean'];const header=['Check-in date','Height (in)','Weight (lb)','Waist (in)','Hips (in)','Chest (in)','Arm (in)','Thigh (in)','DEXA date','DEXA body fat (%)','DEXA fat mass (lb)','DEXA lean mass (lb)','BMI'];const csv=[header.join(','),...entries.map(row=>[...keys.map(key=>row[key]??''),bmi(row)?.toFixed(1)??''].join(','))].join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download='prime50-measurements.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+ fetch('body-config.json').then(response=>{if(!response.ok)throw Error();return response.json();}).then(config=>{if(!config.googleFormUrl)return;const url=new URL(config.googleFormUrl);if(url.protocol!=='https:'||!['docs.google.com','forms.gle'].includes(url.hostname))return;if(url.hostname==='docs.google.com'&&!url.pathname.startsWith('/forms/'))return;el('google-form-link').href=url.href;el('google-form-link').hidden=false;el('google-form-status').textContent='Use the club’s Google Form for your coach check-in. No local measurements are sent automatically.';}).catch(()=>{});
+ render();
+})();

@@ -42,3 +42,8 @@ Added supplied YouTube Short fjKj8_grTQg with thumbnail, player, direct link and
 Added supplied YouTube Short QuH2kvxlpH0 with thumbnail, player, direct link and independent watched status. Title remains provisional.
 
 Added supplied YouTube Short x4pf4R3cjOE with thumbnail, player, direct link and independent watched status. Title remains provisional.
+
+## Body-progress tracker
+The app supports optional weight/height with calculated BMI, waist/hips/chest/arm/thigh inches, and manually entered dated DEXA body fat %, fat mass lb and lean mass lb. Data is kept in a separate localStorage key (`prime50-measurements-v1`), with CSV export, per-entry deletion and complete measurement deletion. One check-in per date; replacing a date explicitly confirms replacement. No measurements are sent to Google automatically. Local records are not encrypted or synchronized; use a private device and export to retain a copy.
+
+`body-config.json` holds only the public responder URL for a Google Form, initially blank. See `tools/GOOGLE-FORM-SETUP.md` for creating the form in the owner's account. Google integration remains pending owner-side authorization/execution. No physique photos are collected. Headless DOM-handler verification covered BMI calculation, waist/DEXA comparison, save/reload, missing scan date rejection, and clearing. Full browser layout and Google submission remain unverified.
