@@ -34,3 +34,5 @@ Added supplied video gA1s6fMe8do with thumbnail, player, direct link and indepen
 Added supplied video ScxQE7yc4xw with thumbnail, player, direct link and independent browser-local watched status. Display name is provisional pending the original title.
 
 Added supplied video z4B2VB32XaA with thumbnail, player, direct link and independent browser-local watched status. Display name is provisional pending the original title.
+
+Added supplied YouTube Short 40ndkd7tsEo with thumbnail, embedded player, direct Shorts link and independent browser-local watched status. Title remains provisional.
