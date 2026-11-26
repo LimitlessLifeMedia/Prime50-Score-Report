@@ -38,3 +38,5 @@ Added supplied video z4B2VB32XaA with thumbnail, player, direct link and indepen
 Added supplied YouTube Short 40ndkd7tsEo with thumbnail, embedded player, direct Shorts link and independent browser-local watched status. Title remains provisional.
 
 Added supplied YouTube Short fjKj8_grTQg with thumbnail, player, direct link and independent watched status. Title remains provisional.
+
+Added supplied YouTube Short QuH2kvxlpH0 with thumbnail, player, direct link and independent watched status. Title remains provisional.
