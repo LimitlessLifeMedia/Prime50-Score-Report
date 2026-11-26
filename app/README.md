@@ -30,3 +30,5 @@ Primary logo and scorecard artwork supplied by the owner are stored in assets/. 
 Added user-supplied video QL1XPIx3OJk with native thumbnail, embedded player, direct link, search and separate persistent watched status. YouTube metadata retrieval returned 403, so the displayed title is explicitly provisional. Playback remains unverified.
 
 Added supplied video gA1s6fMe8do with thumbnail, player, direct link and independent browser-local watched status. Display name is provisional pending the original title.
+
+Added supplied video ScxQE7yc4xw with thumbnail, player, direct link and independent browser-local watched status. Display name is provisional pending the original title.
