@@ -69,7 +69,7 @@ const videoGroups = document.querySelectorAll('[data-video-group]');
 function filterVideos() {
   const query = $('video-search').value.toLowerCase().trim();
   let count = 0;
-  for (const card of videoCards) {
+  for (const card of videoCards.filter(card => card.closest('#library'))) {
     card.hidden = !card.dataset.search.toLowerCase().includes(query);
     if (!card.hidden) count++;
   }
