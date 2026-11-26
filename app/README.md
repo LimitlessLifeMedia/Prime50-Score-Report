@@ -26,3 +26,5 @@ JavaScript syntax and local HTTP delivery checked. Automated browser interaction
 
 ## Brand/content update
 Primary logo and scorecard artwork supplied by the owner are stored in assets/. The supplied scorecard video uses its YouTube thumbnail. The library includes search; onboarding links to the scorecard, weekly planner and community. Full channel import remains blocked by YouTube access restrictions. Individual video links are needed to curate the remaining library. No competitor app inspection was completed; the layout uses common fitness app patterns rather than claiming to reproduce a reviewed competitor.
+
+Added user-supplied video QL1XPIx3OJk with native thumbnail, embedded player, direct link, search and separate persistent watched status. YouTube metadata retrieval returned 403, so the displayed title is explicitly provisional. Playback remains unverified.
